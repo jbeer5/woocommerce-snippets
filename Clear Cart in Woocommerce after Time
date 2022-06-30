@@ -1,0 +1,11 @@
+add_filter('wc_session_expiring', 'so_26545001_filter_session_expiring' );
+
+function so_26545001_filter_session_expiring($seconds) {
+    return 60 * 5; // 5 Minutes
+}
+
+add_filter('wc_session_expiration', 'so_26545001_filter_session_expired' );
+
+function so_26545001_filter_session_expired($seconds) {
+    return 60 * 5; // 5 Minutes
+}
