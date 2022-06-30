@@ -1,0 +1,43 @@
+function custom_track_product_view() {
+    if ( ! is_singular( 'product' ) ) {
+        return;
+    }
+
+    global $post;
+
+    if ( empty( $_COOKIE['woocommerce_recently_viewed'] ) )
+        $viewed_products = array();
+    else
+        $viewed_products = (array) explode( '|', $_COOKIE['woocommerce_recently_viewed'] );
+
+    if ( ! in_array( $post->ID, $viewed_products ) ) {
+        $viewed_products[] = $post->ID;
+    }
+
+    if ( sizeof( $viewed_products ) > 15 ) {
+        array_shift( $viewed_products );
+    }
+
+    // Store for session only
+    wc_setcookie( 'woocommerce_recently_viewed', implode( '|', $viewed_products ) );
+}
+
+add_action( 'template_redirect', 'custom_track_product_view', 20 );
+
+________________________________________________________________________________________
+
+add_shortcode( 'recently_viewed_products', 'bbloomer_recently_viewed_shortcode' );
+ 
+function bbloomer_recently_viewed_shortcode() {
+ 
+   $viewed_products = ! empty( $_COOKIE['woocommerce_recently_viewed'] ) ? (array) explode( '|', wp_unslash( $_COOKIE['woocommerce_recently_viewed'] ) ) : array();
+   $viewed_products = array_reverse( array_filter( array_map( 'absint', $viewed_products ) ) );
+ 
+   if ( empty( $viewed_products ) ) return;
+    
+  
+   $product_ids = implode( ",", $viewed_products );
+ 
+   return $title . do_shortcode("[products ids='$product_ids' limit='6' columns='6' orderby='post__in' class='recentes-vues']");
+
+}
