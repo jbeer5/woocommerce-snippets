@@ -1,0 +1,11 @@
+/**
+* @snippet Redirect to Checkout on Add to Cart
+* @author Rodolfo Melogli
+* @compatible Woo 4.6
+*/
+
+add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_cart' );
+
+function bbloomer_redirect_checkout_add_cart() {
+  return wc_get_checkout_url();
+}
